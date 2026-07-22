@@ -1,0 +1,92 @@
+/* app/globals.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Базовые стили для всего приложения */
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #fff;
+  }
+}
+
+/* Стили для hero-background */
+.hero-bg {
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.8)), 
+    url('https://picsum.photos/id/1015/2000/1200') center/cover;
+}
+
+/* Анимация для карточек */
+.card {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.card:hover {
+  @apply transform translate-y-[-12px];
+}
+
+/* Дополнительные стили для модальных окон */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/80 z-50;
+}
+
+.modal-content {
+  @apply bg-zinc-900 rounded-3xl p-8 max-w-md;
+}
+
+/* Стили для карточек соседей */
+.roommate-card {
+  @apply bg-zinc-900 rounded-3xl overflow-hidden;
+}
+
+/* Стили для кнопок */
+.btn-primary {
+  @apply bg-violet-600 hover:bg-violet-500 text-white py-4 px-6 rounded-2xl;
+}
+
+/* Стили для уведомлений */
+.notification-badge {
+  @apply bg-emerald-500 text-xs px-2 py-0.5 rounded-full;
+}
+
+/* Стили для боковой панели */
+.sidebar {
+  @apply bg-zinc-900 border-r border-white/10 p-6;
+}
+
+/* Стили для навигационных элементов */
+.nav-item {
+  @apply flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white/10 cursor-pointer;
+}
+
+/* Стили для профиля */
+.profile-card {
+  @apply flex items-center gap-3 cursor-pointer hover:bg-white/10 p-3 rounded-2xl;
+}
+
+/* Общие стили для форм */
+.form-input {
+  @apply bg-zinc-800 border border-white/10 focus:border-violet-500 rounded-3xl px-6 py-3;
+}
+
+/* Стили для чата */
+.chat-container {
+  @apply bg-zinc-900 rounded-3xl p-6 max-w-lg;
+}
+
+/* Стили для сообщений */
+.message {
+  @apply mb-4;
+}
+
+/* Стили для карточек квартир */
+.apartment-card {
+  @apply bg-zinc-900 rounded-3xl p-6;
+}
+
+/* Стили для карточек расходов */
+.expense-card {
+  @apply bg-zinc-900 rounded-3xl p-8;
+}
