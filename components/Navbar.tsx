@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaSearch, FaBell, FaUser, FaPowerOff } from 'react-icons/fa';
+import { FaSearch, FaBell, FaUser } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
