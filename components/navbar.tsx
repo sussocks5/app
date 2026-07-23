@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FaSearch, FaBell, FaUser, FaPowerOff } from 'react-icons/fa';
+import { FaSearch, FaBell, FaUser } from 'react-icons/fa'; // Убрали FaPowerOff
 import { useRouter } from 'next/router';
 
 export default function Navbar() {
@@ -70,7 +70,7 @@ export default function Navbar() {
                 <li className="py-2 hover:bg-white/10 cursor-pointer">
                   Настройки
                 </li>
-                <li className="py-2 hover:bg-white/10 cursor-pointer" onClick={handleLogout}>
+                <li className="py-2 hover:bg-white/10 cursor-pointer text-red-500" onClick={handleLogout}>
                   Выйти
                 </li>
               </ul>
