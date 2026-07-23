@@ -1,28 +1,39 @@
+'use client';
+
 import { useState, useEffect } from 'react';
-import { FaSearch, FaBell, FaUser } from 'react-icons/fa'; // Убрали FaPowerOff
+import { FaSearch, FaBell, FaUser } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 
 export default function Navbar() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [notifications, setNotifications] = useState(3);
+  const [notifications, setNotifications] = useState(3); // Теперь setNotifications будет использоваться
   const [profileOpen, setProfileOpen] = useState(false);
 
   useEffect(() => {
-    // Здесь можно добавить логику получения уведомлений из API
+    // Имитация получения уведомлений с сервера
+    const fetchNotifications = async () => {
+      // В реальном проекте здесь будет fetch('/api/notifications')
+      const newCount = Math.floor(Math.random() * 10);
+      setNotifications(newCount);
+    };
+
+    fetchNotifications();
+
+    // Опционально: можно добавить интервал для обновления
+    // const id = setInterval(fetchNotifications, 60000);
+    // return () => clearInterval(id);
   }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Логика поиска
     router.push({
       pathname: '/search',
-      query: { q: searchQuery }
+      query: { q: searchQuery },
     });
   };
 
   const handleLogout = () => {
-    // Логика выхода из системы
     alert('Вы вышли из системы');
   };
 
@@ -30,8 +41,8 @@ export default function Navbar() {
     <header className="bg-zinc-900 border-b border-white/10 px-8 py-5 flex justify-between items-center sticky top-0 z-50">
       <form onSubmit={handleSearch} className="flex-1">
         <div className="relative">
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Поиск соседей или квартир..."
@@ -44,11 +55,7 @@ export default function Navbar() {
       </form>
 
       <div className="flex items-center gap-4">
-        <button 
-          type="button" 
-          onClick={() => alert('Уведомления')}
-          className="p-3 hover:bg-white/10 rounded-2xl"
-        >
+        <button type="button" onClick={() => alert('Уведомления')} className="p-3 hover:bg-white/10 rounded-2xl">
           <div className="relative">
             <FaBell className="text-xl text-white" />
             {notifications > 0 && (
@@ -64,12 +71,8 @@ export default function Navbar() {
           {profileOpen && (
             <div className="absolute top-10 right-0 bg-zinc-900 p-4 rounded-lg shadow-lg z-10">
               <ul className="list-none">
-                <li className="py-2 hover:bg-white/10 cursor-pointer">
-                  Профиль
-                </li>
-                <li className="py-2 hover:bg-white/10 cursor-pointer">
-                  Настройки
-                </li>
+                <li className="py-2 hover:bg-white/10 cursor-pointer">Профиль</li>
+                <li className="py-2 hover:bg-white/10 cursor-pointer">Настройки</li>
                 <li className="py-2 hover:bg-white/10 cursor-pointer text-red-500" onClick={handleLogout}>
                   Выйти
                 </li>
