@@ -1,1 +1,17 @@
-'use client';\n\nimport { useEffect } from 'react';\nimport { useRouter } from 'next/navigation';\n\nexport default function ProtectedLayout({ children }: { children: React.ReactNode }) {\n  const router = useRouter();\n\n  useEffect(() => {\n    const token = localStorage.getItem('token');\n    if (!token) {\n      router.push('/login');\n    }\n  }, [router]);\n\n  return <>{children}</>;\n}\n
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+    }
+  }, [router]);
+
+  return <>{children}</>;
+}
