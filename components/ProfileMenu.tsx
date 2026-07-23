@@ -49,7 +49,7 @@ export default function ProfileMenu() {
             onClick={handleLogout}
             className="w-full flex items-center gap-2 text-red-500 hover:text-red-400 py-2"
           >
-            <FaLogOut /> Выйти
+            <FaSignOutAlt /> Выйти
           </button>
         </div>
       )}
