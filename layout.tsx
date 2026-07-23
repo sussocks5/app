@@ -1,10 +1,10 @@
 import './globals.css';
 import { Metadata } from 'next';
 import Sidebar from './components/Sidebar';
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar';
 
 export const metadata: Metadata = {
-  title: 'CoLive — Совместная аренда',
+  title: 'НашеНачало — Совместная аренда',
   description: 'Приложение для поиска соседей по аренде жилья',
 };
 
