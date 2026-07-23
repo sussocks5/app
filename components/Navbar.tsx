@@ -5,7 +5,6 @@ import { FaSearch, FaBell, FaUser } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
-  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [notifications, setNotifications] = useState(3);
   const [profileOpen, setProfileOpen] = useState(false);
