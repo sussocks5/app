@@ -2,6 +2,7 @@ import './globals.css';
 import { Metadata } from 'next';
 import { FaUsers, FaHome, FaHeart, FaComments, FaWallet } from 'react-icons/fa';
 import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
 
 export const metadata: Metadata = {
   title: 'CoLive — Совместная аренда',
