@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoLive - Совместная аренда</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .card-hover:hover { transform: translateY(-12px); }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100">
+    <div class="max-w-6xl mx-auto p-6">
+        <!-- Header -->
+        <header class="flex justify-between items-center py-6 border-b border-white/10">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-violet-600 to-fuchsia-500 rounded-3xl flex items-center justify-center text-3xl">🏠</div>
+                <h1 class="text-4xl font-bold tracking-tight">CoLive</h1>
+            </div>
+            <nav class="flex gap-8">
+                <a href="#" onclick="switchTab(0)" class="hover:text-violet-400">Поиск соседей</a>
+                <a href="#" onclick="switchTab(1)" class="hover:text-violet-400">Квартиры</a>
+                <a href="#" onclick="switchTab(2)" class="hover:text-violet-400">Чат</a>
+            </nav>
+            <button onclick="showLogin()" class="bg-white text-black px-6 py-3 rounded-2xl font-medium">Войти</button>
+        </header>
+
+        <!-- Tab 1: Поиск соседей -->
+        <div id="tab0" class="tab">
+            <h1 class="text-5xl font-bold mt-12 mb-4">Найди идеальных соседей</h1>
+            <div class="grid md:grid-cols-3 gap-6" id="roommates-grid"></div>
+        </div>
+
+        <!-- Tab 2: Квартиры -->
+        <div id="tab1" class="tab hidden">
+            <h1 class="text-5xl font-bold mt-12 mb-8">Квартиры под группу</h1>
+            <div class="bg-zinc-900 rounded-3xl p-8 max-w-2xl">
+                <img src="https://picsum.photos/id/133/800/400" class="rounded-2xl w-full">
+                <div class="mt-6 flex justify-between">
+                    <div>
+                        <div class="text-2xl font-semibold">2-комнатная квартира</div>
+                        <div class="text-emerald-400">Москва • 45 000 ₽/мес</div>
+                    </div>
+                    <button onclick="joinGroup()" class="bg-emerald-600 px-10 py-4 rounded-2xl">Присоединиться</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Чат -->
+        <div id="tab2" class="tab hidden">
+            <h1 class="text-5xl font-bold mt-12 mb-8">Чат с матчами</h1>
+            <div class="bg-zinc-900 rounded-3xl p-6 max-w-xl">
+                <div id="chat-box" class="h-80 overflow-y-auto space-y-4 mb-6 p-4 bg-black/30 rounded-2xl"></div>
+                <div class="flex gap-3">
+                    <input id="chat-input" type="text" class="flex-1 bg-zinc-800 rounded-2xl px-6 py-4" placeholder="Напишите сообщение...">
+                    <button onclick="sendChatMessage()" class="bg-violet-600 px-8 rounded-2xl">→</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const roommates = [
+            {name:"Алексей Морозов", compat:96, age:26, job:"Программист"},
+            {name:"Мария Соколова", compat:91, age:24, job:"Дизайнер"},
+            {name:"Дмитрий Иванов", compat:87, age:28, job:"Маркетолог"}
+        ];
+
+        function renderRoommates() {
+            const grid = document.getElementById('roommates-grid');
+            grid.innerHTML = roommates.map(r => `
+                <div class="bg-zinc-900 rounded-3xl p-8 card-hover">
+                    <div class="text-emerald-400 text-5xl font-bold mb-4">${r.compat}%</div>
+                    <div class="text-3xl font-semibold">${r.name}</div>
+                    <div class="text-zinc-400">${r.age} лет • ${r.job}</div>
+                    <button onclick="like('${r.name}')" class="mt-8 w-full py-4 bg-violet-600 rounded-2xl font-medium">❤️ Нравится</button>
+                </div>
+            `).join('');
+        }
+
+        function like(name) {
+            alert(`❤️ Матч с ${name} создан!`);
+        }
+
+        function joinGroup() {
+            alert("✅ Вы присоединились к группе! Теперь можно смотреть квартиру.");
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            if (input.value.trim()) {
+                const box = document.getElementById('chat-box');
+                box.innerHTML += `<div class="text-right"><span class="bg-violet-600 px-5 py-3 rounded-3xl inline-block">${input.value}</span></div>`;
+                box.scrollTop = box.scrollHeight;
+                input.value = '';
+            }
+        }
+
+        function switchTab(n) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
+            document.getElementById('tab' + n).classList.remove('hidden');
+        }
+
+        function showLogin() {
+            alert("✅ Демо-режим входа (в реальном приложении будет Supabase)");
+        }
+
+        // Init
+        window.onload = () => {
+            renderRoommates();
+            switchTab(0);
+        };
+    </script>
+</body>
+</html>
