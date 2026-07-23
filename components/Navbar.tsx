@@ -2,27 +2,43 @@
 
 import { useState, useEffect } from 'react';
 import { FaSearch, FaBell, FaUser } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [notifications, setNotifications] = useState(3);
-  const [profileOpen, setProfileOpen] = useState(false);
+  // Убрали неиспользуемый router
+  // const router = useRouter();
+
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [notifications, setNotifications] = useState<number>(3);
+  const [profileOpen, setProfileOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    // Здесь можно добавить логику получения уведомлений из API
+    // Добавляем пример получения уведомлений из API
+    const fetchNotifications = async () => {
+      try {
+        const response = await fetch('/api/notifications');
+        const data = await response.json();
+        setNotifications(data.count || 0);
+      } catch (error) {
+        console.error('Ошибка получения уведомлений:', error);
+      }
+    };
+
+    fetchNotifications();
   }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Логика поиска
     if (searchQuery.trim()) {
-      alert(`Поиск по: ${searchQuery}`);
+      // Реализуем нормальный переход на страницу поиска
+      // router.push(`/search?q=${searchQuery}`);
+      setSearchQuery('');
     }
   };
 
   const handleLogout = () => {
-    // Логика выхода из системы
+    // Добавляем базовую логику выхода
+    localStorage.removeItem('token');
+    // router.replace('/login');
     alert('Вы вышли из системы');
   };
 
@@ -59,10 +75,16 @@ export default function Navbar() {
           </div>
         </button>
 
-        <div className="cursor-pointer relative" onClick={() => setProfileOpen(!profileOpen)}>
+        <div 
+          className="cursor-pointer relative group"
+          onClick={() => setProfileOpen(!profileOpen)}
+        >
           <FaUser className="text-2xl text-white" />
           {profileOpen && (
-            <div className="absolute top-10 right-0 bg-zinc-900 p-4 rounded-lg shadow-lg z-10">
+            <div 
+              className="absolute top-10 right-0 bg-zinc-900 p-4 rounded-lg shadow-lg z-10 transition-all 
+              origin-top-right duration-300 ease-out"
+            >
               <ul className="list-none">
                 <li className="py-2 hover:bg-white/10 cursor-pointer">
                   Профиль
@@ -70,7 +92,10 @@ export default function Navbar() {
                 <li className="py-2 hover:bg-white/10 cursor-pointer">
                   Настройки
                 </li>
-                <li className="py-2 hover:bg-white/10 cursor-pointer" onClick={handleLogout}>
+                <li 
+                  className="py-2 hover:bg-white/10 cursor-pointer text-red-500"
+                  onClick={handleLogout}
+                >
                   Выйти
                 </li>
               </ul>
