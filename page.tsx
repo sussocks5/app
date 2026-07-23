@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { FaUsers, FaHome, FaHeart, FaComments, FaWallet } from 'react-icons/fa';
 import RoommateCard from './components/RoommateCard';
@@ -12,32 +14,18 @@ export default function Home() {
   const [activePage, setActivePage] = useState(0);
   const [matchCount, setMatchCount] = useState(3);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [messages, setMessages] = useState<string[]>(['👋 Привет! Когда удобно посмотреть квартиру?']);
+  const [chatInput, setChatInput] = useState('');
 
   const navigate = (page: number) => {
     setActivePage(page);
   };
 
-  const renderRoommates = () => {
-    return roommates.map(r => (
-      <div key={r.id} className="bg-zinc-900 rounded-3xl overflow-hidden card">
-        <img src={r.img} alt="Сосед" className="w-full h-60 object-cover" />
-        <div className="p-6">
-          <div className="flex justify-between">
-            <div>
-              <div className="font-semibold text-xl">{r.name}, {r.age}</div>
-              <div className="text-sm text-zinc-400">{r.job}</div>
-            </div>
-            <div className="text-emerald-400 font-bold text-2xl">{r.compat}%</div>
-          </div>
-          <button 
-            onClick={() => alert(`❤️ Матч! Совместимость ${Math.floor(Math.random()*10 + 85)}%`)}
-            className="mt-6 w-full py-4 bg-violet-600 hover:bg-violet-500 rounded-2xl font-medium"
-          >
-            Нравится
-          </button>
-        </div>
-      </div>
-    ));
+  const sendMessage = () => {
+    if (chatInput.trim()) {
+      setMessages([...messages, chatInput]);
+      setChatInput('');
+    }
   };
 
   return (
@@ -47,7 +35,9 @@ export default function Home() {
           <h1 className="text-4xl font-bold mb-2">Найди идеальных соседей</h1>
           <p className="text-zinc-400 mb-8">Алгоритм CoLive подобрал для тебя 28 человек</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {renderRoommates()}
+            {roommates.map(roommate => (
+              <RoommateCard key={roommate.id} roommate={roommate} />
+            ))}
           </div>
         </div>
       )}
@@ -70,4 +60,66 @@ export default function Home() {
                   Подать заявку в группу
                 </button>
               </div>
-            </
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activePage === 2 && (
+        <div>
+          <h1 className="text-4xl font-bold mb-8">Твои матчи</h1>
+          <div className="space-y-6">
+            {roommates.map(r => (
+              <div key={r.id} onClick={() => navigate(3)} className="bg-zinc-900 p-6 rounded-3xl flex gap-6 card cursor-pointer">
+                <img src={r.img} alt={r.name} className="w-20 h-20 rounded-2xl" />
+                <div>
+                  <div className="font-semibold">{r.name}</div>
+                  <div className="text-emerald-400">{r.compat}%</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {activePage === 3 && (
+        <div>
+          <h1 className="text-4xl font-bold mb-6">Чаты</h1>
+          <div className="bg-zinc-900 rounded-3xl p-6 max-w-lg">
+            <div className="h-96 overflow-auto mb-4 space-y-4">
+              {messages.map((msg, idx) => (
+                <div key={idx} className={idx === 0 ? 'text-emerald-400' : 'text-right'}>
+                  {msg}
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-3">
+              <input 
+                id="chat-input" 
+                type="text" 
+                placeholder="Напиши сообщение..." 
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                className="flex-1 bg-zinc-800 rounded-3xl px-6 py-4"
+              />
+              <button onClick={sendMessage} className="px-8 bg-violet-600 rounded-3xl">Отправить</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activePage === 4 && (
+        <div>
+          <h1 className="text-4xl font-bold mb-8">Общие расходы</h1>
+          <div className="bg-zinc-900 rounded-3xl p-8">
+            <p className="text-2xl">Аренда: <span className="font-bold">45 000 ₽</span></p>
+            <button onClick={() => alert("💰 Расход добавлен")} className="mt-10 px-8 py-4 bg-white text-black rounded-2xl font-medium">
+              Добавить расход
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
