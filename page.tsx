@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FaUsers, FaHome, FaHeart, FaComments, FaWallet } from 'react-icons/fa';
+import RoommateCard from './components/RoommateCard';
 
 const roommates = [
   {id:1, name:"Алексей Морозов", age:26, compat:96, job:"Программист", img:"https://picsum.photos/id/64/600/400"},
