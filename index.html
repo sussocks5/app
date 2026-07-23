@@ -3,114 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoLive - Совместная аренда</title>
+    <title>CoLive — Совместная аренда</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body { font-family: 'Inter', system-ui, sans-serif; }
-        .card-hover:hover { transform: translateY(-12px); }
+        .hero-bg { background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.8)), url('https://picsum.photos/id/1015/2000/1200') center/cover; }
+        .card { transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
+        .card:hover { transform: translateY(-12px); }
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-100">
-    <div class="max-w-6xl mx-auto p-6">
-        <!-- Header -->
-        <header class="flex justify-between items-center py-6 border-b border-white/10">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-violet-600 to-fuchsia-500 rounded-3xl flex items-center justify-center text-3xl">🏠</div>
-                <h1 class="text-4xl font-bold tracking-tight">CoLive</h1>
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-72 bg-zinc-900 border-r border-white/10 p-6 flex flex-col">
+            <div class="flex items-center gap-3 mb-12">
+                <div class="w-11 h-11 bg-violet-600 rounded-2xl flex items-center justify-center text-3xl font-bold">C</div>
+                <div class="text-3xl font-bold tracking-tighter">CoLive</div>
             </div>
-            <nav class="flex gap-8">
-                <a href="#" onclick="switchTab(0)" class="hover:text-violet-400">Поиск соседей</a>
-                <a href="#" onclick="switchTab(1)" class="hover:text-violet-400">Квартиры</a>
-                <a href="#" onclick="switchTab(2)" class="hover:text-violet-400">Чат</a>
+            
+            <nav class="space-y-2 flex-1">
+                <a onclick="navigate(0)" class="nav-item flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white/10 cursor-pointer active"><i class="fas fa-users"></i> Поиск соседей</a>
+                <a onclick="navigate(1)" class="nav-item flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white/10 cursor-pointer"><i class="fas fa-home"></i> Квартиры</a>
+                <a onclick="navigate(2)" class="nav-item flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white/10 cursor-pointer"><i class="fas fa-heart"></i> Матчи <span id="matchCount" class="ml-auto bg-emerald-500 text-xs px-2 py-0.5 rounded-full">3</span></a>
+                <a onclick="navigate(3)" class="nav-item flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white/10 cursor-pointer"><i class="fas fa-comments"></i> Чаты</a>
+                <a onclick="navigate(4)" class="nav-item flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white/10 cursor-pointer"><i class="fas fa-wallet"></i> Расходы</a>
             </nav>
-            <button onclick="showLogin()" class="bg-white text-black px-6 py-3 rounded-2xl font-medium">Войти</button>
-        </header>
 
-        <!-- Tab 1: Поиск соседей -->
-        <div id="tab0" class="tab">
-            <h1 class="text-5xl font-bold mt-12 mb-4">Найди идеальных соседей</h1>
-            <div class="grid md:grid-cols-3 gap-6" id="roommates-grid"></div>
-        </div>
-
-        <!-- Tab 2: Квартиры -->
-        <div id="tab1" class="tab hidden">
-            <h1 class="text-5xl font-bold mt-12 mb-8">Квартиры под группу</h1>
-            <div class="bg-zinc-900 rounded-3xl p-8 max-w-2xl">
-                <img src="https://picsum.photos/id/133/800/400" class="rounded-2xl w-full">
-                <div class="mt-6 flex justify-between">
-                    <div>
-                        <div class="text-2xl font-semibold">2-комнатная квартира</div>
-                        <div class="text-emerald-400">Москва • 45 000 ₽/мес</div>
-                    </div>
-                    <button onclick="joinGroup()" class="bg-emerald-600 px-10 py-4 rounded-2xl">Присоединиться</button>
+            <div onclick="showProfile()" class="mt-auto flex items-center gap-3 cursor-pointer hover:bg-white/10 p-3 rounded-2xl">
+                <img src="https://picsum.photos/id/64/48/48" class="w-10 h-10 rounded-2xl object-cover">
+                <div>
+                    <div class="font-medium">Ты (Демо)</div>
+                    <div class="text-xs text-zinc-500">Профиль заполнен на 85%</div>
                 </div>
             </div>
         </div>
 
-        <!-- Tab 3: Чат -->
-        <div id="tab2" class="tab hidden">
-            <h1 class="text-5xl font-bold mt-12 mb-8">Чат с матчами</h1>
-            <div class="bg-zinc-900 rounded-3xl p-6 max-w-xl">
-                <div id="chat-box" class="h-80 overflow-y-auto space-y-4 mb-6 p-4 bg-black/30 rounded-2xl"></div>
-                <div class="flex gap-3">
-                    <input id="chat-input" type="text" class="flex-1 bg-zinc-800 rounded-2xl px-6 py-4" placeholder="Напишите сообщение...">
-                    <button onclick="sendChatMessage()" class="bg-violet-600 px-8 rounded-2xl">→</button>
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <div class="bg-zinc-900 border-b border-white/10 px-8 py-5 flex justify-between items-center sticky top-0 z-50">
+                <input id="search" type="text" placeholder="Поиск соседей или квартир..." class="bg-zinc-800 border border-white/10 focus:border-violet-500 rounded-3xl px-6 py-3 w-96 outline-none">
+                <button onclick="showNotifications()" class="relative p-3 hover:bg-white/10 rounded-2xl">
+                    <i class="fas fa-bell text-xl"></i>
+                </button>
+            </div>
+
+            <div id="page0" class="p-8">
+                <h1 class="text-4xl font-bold mb-2">Найди идеальных соседей</h1>
+                <p class="text-zinc-400 mb-8">Алгоритм CoLive подобрал для тебя 28 человек</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="roommates-grid"></div>
+            </div>
+
+            <div id="page1" class="p-8 hidden">
+                <h1 class="text-4xl font-bold mb-8">Доступные квартиры под группу</h1>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-zinc-900 rounded-3xl p-6 card">
+                        <img src="https://picsum.photos/id/133/800/400" class="rounded-2xl w-full h-64 object-cover">
+                        <div class="mt-6">
+                            <div class="flex justify-between items-baseline">
+                                <div class="font-semibold text-2xl">2-комн. квартира</div>
+                                <div class="text-3xl font-bold">45 000 ₽</div>
+                            </div>
+                            <button onclick="applyToApartment()" class="mt-6 w-full py-4 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-semibold">Подать заявку в группу</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page2" class="p-8 hidden">
+                <h1 class="text-4xl font-bold mb-8">Твои матчи</h1>
+                <div class="space-y-6" id="matches-list"></div>
+            </div>
+
+            <div id="page3" class="p-8 hidden">
+                <h1 class="text-4xl font-bold mb-6">Чаты</h1>
+                <div class="bg-zinc-900 rounded-3xl p-6 max-w-lg">
+                    <div class="h-96 overflow-auto mb-4 space-y-4" id="chat-messages">
+                        <div class="text-emerald-400">👋 Привет! Когда удобно посмотреть квартиру?</div>
+                    </div>
+                    <div class="flex gap-3">
+                        <input id="chat-input" type="text" placeholder="Напиши сообщение..." class="flex-1 bg-zinc-800 rounded-3xl px-6 py-4">
+                        <button onclick="sendMessage()" class="px-8 bg-violet-600 rounded-3xl">Отправить</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page4" class="p-8 hidden">
+                <h1 class="text-4xl font-bold mb-8">Общие расходы</h1>
+                <div class="bg-zinc-900 rounded-3xl p-8">
+                    <p class="text-2xl">Аренда: <span class="font-bold">45 000 ₽</span></p>
+                    <button onclick="addExpense()" class="mt-10 px-8 py-4 bg-white text-black rounded-2xl font-medium">Добавить расход</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Profile Modal -->
+    <div id="profileModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="bg-zinc-900 rounded-3xl w-full max-w-md p-8">
+            <h2 class="text-3xl font-bold mb-6">Твой профиль</h2>
+            <input id="profile-name" value="Александр Иванов" class="w-full bg-zinc-800 p-4 rounded-2xl mb-4">
+            <textarea id="profile-bio" class="w-full bg-zinc-800 p-4 rounded-2xl h-32">Люблю спорт, программирование и ранние подъёмы.</textarea>
+            <button onclick="saveProfile()" class="mt-6 w-full py-4 bg-violet-600 rounded-2xl">Сохранить</button>
+            <button onclick="hideProfile()" class="mt-3 w-full py-4 text-zinc-400">Закрыть</button>
+        </div>
+    </div>
+
     <script>
         const roommates = [
-            {name:"Алексей Морозов", compat:96, age:26, job:"Программист"},
-            {name:"Мария Соколова", compat:91, age:24, job:"Дизайнер"},
-            {name:"Дмитрий Иванов", compat:87, age:28, job:"Маркетолог"}
+            {id:1, name:"Алексей Морозов", age:26, compat:96, job:"Программист", img:"https://picsum.photos/id/64/600/400"},
+            {id:2, name:"Мария Соколова", age:24, compat:89, job:"Дизайнер", img:"https://picsum.photos/id/1005/600/400"},
+            {id:3, name:"Дмитрий Ковалёв", age:28, compat:82, job:"Маркетолог", img:"https://picsum.photos/id/201/600/400"}
         ];
 
         function renderRoommates() {
             const grid = document.getElementById('roommates-grid');
             grid.innerHTML = roommates.map(r => `
-                <div class="bg-zinc-900 rounded-3xl p-8 card-hover">
-                    <div class="text-emerald-400 text-5xl font-bold mb-4">${r.compat}%</div>
-                    <div class="text-3xl font-semibold">${r.name}</div>
-                    <div class="text-zinc-400">${r.age} лет • ${r.job}</div>
-                    <button onclick="like('${r.name}')" class="mt-8 w-full py-4 bg-violet-600 rounded-2xl font-medium">❤️ Нравится</button>
+                <div class="bg-zinc-900 rounded-3xl overflow-hidden card">
+                    <img src="${r.img}" class="w-full h-60 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between">
+                            <div><div class="font-semibold text-xl">${r.name}, ${r.age}</div><div class="text-sm text-zinc-400">${r.job}</div></div>
+                            <div class="text-emerald-400 font-bold text-2xl">${r.compat}%</div>
+                        </div>
+                        <button onclick="likeRoommate(${r.id})" class="mt-6 w-full py-4 bg-violet-600 hover:bg-violet-500 rounded-2xl font-medium">Нравится</button>
+                    </div>
                 </div>
             `).join('');
         }
 
-        function like(name) {
-            alert(`❤️ Матч с ${name} создан!`);
+        function renderMatches() {
+            const container = document.getElementById('matches-list');
+            container.innerHTML = roommates.map(r => `
+                <div onclick="openChat()" class="bg-zinc-900 p-6 rounded-3xl flex gap-6 card cursor-pointer">
+                    <img src="${r.img}" class="w-20 h-20 rounded-2xl">
+                    <div><div class="font-semibold">${r.name}</div><div class="text-emerald-400">${r.compat}%</div></div>
+                </div>
+            `).join('');
         }
 
-        function joinGroup() {
-            alert("✅ Вы присоединились к группе! Теперь можно смотреть квартиру.");
+        function navigate(page) {
+            document.querySelectorAll('[id^="page"]').forEach(p => p.classList.add('hidden'));
+            document.getElementById('page' + page).classList.remove('hidden');
         }
 
-        function sendChatMessage() {
+        function likeRoommate(id) { alert(`❤️ Матч! Совместимость ${Math.floor(Math.random()*10 + 85)}%`); }
+        function applyToApartment() { alert("✅ Заявка отправлена!"); }
+        function openChat() { navigate(3); }
+        function sendMessage() {
             const input = document.getElementById('chat-input');
-            if (input.value.trim()) {
-                const box = document.getElementById('chat-box');
-                box.innerHTML += `<div class="text-right"><span class="bg-violet-600 px-5 py-3 rounded-3xl inline-block">${input.value}</span></div>`;
-                box.scrollTop = box.scrollHeight;
+            if (input.value) {
+                const msgs = document.getElementById('chat-messages');
+                msgs.innerHTML += `<div class="text-right">${input.value}</div>`;
+                msgs.scrollTop = msgs.scrollHeight;
                 input.value = '';
             }
         }
+        function showProfile() { document.getElementById('profileModal').classList.remove('hidden'); }
+        function hideProfile() { document.getElementById('profileModal').classList.add('hidden'); }
+        function saveProfile() { alert("✅ Сохранено!"); hideProfile(); }
+        function showNotifications() { alert("🛎️ Уведомления"); }
+        function addExpense() { alert("💰 Расход добавлен"); }
 
-        function switchTab(n) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
-            document.getElementById('tab' + n).classList.remove('hidden');
-        }
-
-        function showLogin() {
-            alert("✅ Демо-режим входа (в реальном приложении будет Supabase)");
-        }
-
-        // Init
         window.onload = () => {
             renderRoommates();
-            switchTab(0);
+            renderMatches();
+            navigate(0);
         };
     </script>
 </body>
